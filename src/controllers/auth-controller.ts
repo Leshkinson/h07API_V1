@@ -3,7 +3,7 @@ import {UserService} from "../services/user-service";
 import {JWT, TokenService} from "../application/token-service";
 import {TokenMapper} from "../dto/mappers/token-mapper";
 import {QueryService} from "../services/query-service";
-import {MailService} from "../application/mail-service";
+import {AuthRequest} from "../ts/types";
 
 export class AuthController {
     static async login(req: Request, res: Response) {
@@ -14,7 +14,7 @@ export class AuthController {
             const {loginOrEmail, password} = req.body;
             const user = await userService.verifyUser(loginOrEmail, password);
 
-            if (user) {
+            if (user && user.isConfirmed) {
                 const token = tokenService.generateToken(TokenMapper.prepareModel(user))
 
                 res.status(200).json({
@@ -70,10 +70,32 @@ export class AuthController {
     }
 
     static async confirmEmail(req: Request, res: Response) {
-        const{code} = req.query
+        try {
+            const userService = new UserService();
+            const {code} = req.query as AuthRequest;
+            const confirmed = await userService.confirmUser(code);
+            if (confirmed) res.sendStatus(204)
 
+        } catch (error) {
+            if (error instanceof Error) {
+                res.sendStatus(400);
+                console.log(error.message);
+            }
+        }
+    }
 
-
+    static async resendConfirm(req: Request, res: Response) {
+        try {
+            const userService = new UserService();
+            const{email} = req.body
+            await userService.resendConfirmByUser(email)
+            res.sendStatus(204)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.sendStatus(400);
+                console.log(error.message);
+            }
+        }
     }
 }
 

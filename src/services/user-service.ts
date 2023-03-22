@@ -55,11 +55,21 @@ export class UserService {
     public async confirmUser(code: string) {
         const user = await this.userRepository.findUserByCode(code)
         if(!user) return false
+        console.log('data by user', new Date(user.expirationDate).getTime())
+        console.log('Data now', new Date().getTime())
         if(new Date(user.expirationDate).getTime() > new Date().getTime()){
             return await this.userRepository.updateUserByConfirmed((user._id).toString())
         }
-
+        await this.userRepository.deleteUser((user._id).toString())
         return false
+    }
+
+    public async resendConfirmByUser(email: string): Promise<void> {
+        const mailService = new MailService()
+        const user = await this.userRepository.findUserByEmail(email)
+        if(user) {
+            await mailService.sendConfirmMessageToEmail(email, user.code)
+        }
     }
 
     public async delete(id: RefType): Promise<IUser> {

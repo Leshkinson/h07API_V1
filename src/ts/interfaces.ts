@@ -23,7 +23,7 @@ export interface IUser {
     password: string;
     isConfirmed: boolean,
     code: string,
-    expirationDate: mongoose.Schema.Types.Date
+    expirationDate: Date
 }
 
 export interface IComment {

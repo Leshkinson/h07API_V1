@@ -30,6 +30,10 @@ export class UsersRepository {
         return this.userModel.findOne({"code": code})
     }
 
+    public async findUserByEmail(email: string): Promise<IUser | null> {
+        return this.userModel.findOne({"email": email})
+    }
+
     public async updateUserByConfirmed(id: string): Promise<IUser | null> {
         return this.userModel.findOneAndUpdate({_id: id}, {
             isConfirmed: true
@@ -45,7 +49,7 @@ export class UsersRepository {
     }
 
     public async createUser(login: string, password: string, email: string): Promise<IUser> {
-        return await this.userModel.create({login, password, email});
+        return await this.userModel.create({login, password, email, isConfirmed: true});
     }
 
     public async createUserByRegistration(login: string, password: string, email: string, code: string): Promise<IUser> {
