@@ -2,7 +2,8 @@ import bcrypt from "bcrypt";
 import {IUser} from "../ts/interfaces";
 import {RefType, SortOrder} from "mongoose";
 import {UsersRepository} from "../repositories/users-repository";
-
+import {v4 as uuidv4} from "uuid";
+import {MailService} from "../application/mail-service";
 
 export class UserService {
     private userRepository: UsersRepository;
@@ -33,6 +34,34 @@ export class UserService {
         return await this.userRepository.createUser(login, hashPassword, email)
     }
 
+    public async createByRegistration(login: string, password: string, email: string): Promise<IUser | null> {
+
+        const hashPassword = await bcrypt.hash(password, 5);
+        const code = uuidv4();
+        const user = await this.userRepository.createUserByRegistration(login, hashPassword, email, code)
+        try {
+        const mailService = new MailService()
+        await mailService.sendConfirmMessageToEmail(email, code)
+        } catch (error) {
+            if (error instanceof Error) {
+                await this.userRepository.deleteUser((user._id).toString())
+                console.log(error.message);
+                return null
+            }
+        }
+        return user
+    }
+
+    public async confirmUser(code: string) {
+        const user = await this.userRepository.findUserByCode(code)
+        if(!user) return false
+        if(new Date(user.expirationDate).getTime() > new Date().getTime()){
+            return await this.userRepository.updateUserByConfirmed((user._id).toString())
+        }
+
+        return false
+    }
+
     public async delete(id: RefType): Promise<IUser> {
         const deleteUser = await this.userRepository.deleteUser(id);
         if (deleteUser) return deleteUser;
@@ -45,8 +74,8 @@ export class UserService {
 
     public async verifyUser(loginOrEmail: string, password: string): Promise<IUser> {
         const consideredUser = await this.userRepository.findUser(loginOrEmail);
-        if(!consideredUser) throw new Error();
-        if(await bcrypt.compare(password, consideredUser.password)) return consideredUser;
+        if (!consideredUser) throw new Error();
+        if (await bcrypt.compare(password, consideredUser.password)) return consideredUser;
 
         throw new Error();
     }

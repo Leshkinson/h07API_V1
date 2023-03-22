@@ -26,6 +26,16 @@ export class UsersRepository {
         return this.userModel.findOne({$or: [{"login": loginOrEmail}, {"email": loginOrEmail}]})
     }
 
+    public async findUserByCode(code: string): Promise<IUser | null> {
+        return this.userModel.findOne({"code": code})
+    }
+
+    public async updateUserByConfirmed(id: string): Promise<IUser | null> {
+        return this.userModel.findOneAndUpdate({_id: id}, {
+            isConfirmed: true
+        })
+    }
+
     public async findUserById(id: string | JwtPayload): Promise<IUser | null> {
         return this.userModel.findById({_id: id})
     }
@@ -36,6 +46,12 @@ export class UsersRepository {
 
     public async createUser(login: string, password: string, email: string): Promise<IUser> {
         return await this.userModel.create({login, password, email});
+    }
+
+    public async createUserByRegistration(login: string, password: string, email: string, code: string): Promise<IUser> {
+        const expirationDate = new Date();
+        expirationDate.setMinutes(expirationDate.getMinutes() + 5)
+        return await this.userModel.create({login, password, email, code, isConfirmed: false, expirationDate})
     }
 
     public async deleteUser(id: RefType) {

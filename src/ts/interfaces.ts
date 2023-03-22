@@ -21,6 +21,9 @@ export interface IUser {
     login: string;
     email: string;
     password: string;
+    isConfirmed: boolean,
+    code: string,
+    expirationDate: mongoose.Schema.Types.Date
 }
 
 export interface IComment {

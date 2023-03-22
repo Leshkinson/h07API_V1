@@ -1,10 +1,13 @@
 import {Router} from "express";
-import {isErrorMiddleware} from "../middleware/catch-error";
 import {authMiddleware} from "../middleware/auth";
+import {isErrorMiddleware} from "../middleware/catch-error";
 import {BlogController} from "../controllers/blog-controller";
 import {PostController} from "../controllers/post-controller";
+import {UserController} from "../controllers/user-controller";
+import {AuthController} from "../controllers/auth-controller";
 import {TestController} from "../controllers/testing-controller";
 import {basicAuthorization} from "../authorizations/authorization";
+import {CommentController} from "../controllers/comment-controller";
 import {
     blogValidation,
     commentValidation,
@@ -12,8 +15,9 @@ import {
     postValidationWithoutBodyId,
     userValidation
 } from "../validator/validator";
-import {UserController} from "../controllers/user-controller";
-import {CommentController} from "../controllers/comment-controller";
+
+
+
 
 export const router = Router();
 
@@ -49,8 +53,8 @@ router.delete('/comments/:id', authMiddleware, CommentController.deleteComment);
 router.get('/comments/:id', CommentController.getOneComment);
 
 /**Auth**/
-router.post('/auth/login', UserController.login);
+router.post('/auth/login', AuthController.login);
 router.post('/auth/registration-confirmation', );
-router.post('/auth/registration', );
+router.post('/auth/registration', AuthController.registration);
 router.post('/auth/registration-email-resending', );
-router.get('/auth/me', authMiddleware, isErrorMiddleware, UserController.me);
+router.get('/auth/me', authMiddleware, isErrorMiddleware, AuthController.me);
