@@ -1,6 +1,7 @@
 import {BlogService} from "../services/blog-service";
 import {body, validationResult, CustomValidator} from 'express-validator';
-import {UserRepository} from "../repositories/users-repository";
+import {UserService} from "../services/user-service";
+
 export const myValidationResult = validationResult.withDefaults({
     formatter: error => {
         return {
@@ -48,19 +49,21 @@ const isEmailPattern: CustomValidator = (value: string) => {
 }
 
 const isExistEmail: CustomValidator = async (value: string) => {
-    const userRepository = new UserRepository()
-    const user = await userRepository.findUserByEmail(value)
-    if(user) throw new Error()
-    return true
+    const userService = new UserService()
+    const user = await userService.findByEmail(value)
+    if (user) {
+        throw new Error()
+    }
+
+    return true;
 }
 
-// const isExistLogin: CustomValidator = async (value: string) => {
-//     const userRepository = new UserRepository()
-//     const user = await userRepository.findUserByLogin(value)
-//     if(user) throw new Error()
-//     return true
-// }
-
+const isExistLogin: CustomValidator = async (value: string) => {
+    const userService = new UserService()
+    const user = await userService.findByLogin(value)
+    if (user) throw new Error()
+    return true
+}
 
 
 export const nameValidation = body('name')
@@ -110,7 +113,7 @@ export const shortDescriptionValidation = body('shortDescription')
 
 export const contentDescriptionValidation = body('content')
     .trim()
-    .isLength({ max: 1000})
+    .isLength({max: 1000})
     .withMessage("Content has incorrect length. (Content has more than 1000 characters)")
     .notEmpty()
     .withMessage("Content has incorrect length. (Content is empty)")
@@ -127,27 +130,27 @@ export const blogIdValidation = body('blogId')
 export const loginValidation = body('login')
     .trim()
     .isString()
-    .withMessage("Login has incorrect value. (BlogId doesn't string)")
-    .isLength({ min: 3, max: 10})
+    .withMessage("Login has incorrect value. (Login doesn't string)")
+    .isLength({min: 3, max: 10})
     .withMessage("Login has incorrect value. (Content has less than 3 or more than 10 characters)")
     .custom(isLoginPattern)
     .withMessage("Login has incorrect value. (Login doesn't match pattern)")
-    // .custom(isExistLogin)
-    // .withMessage("Login is exist. (This login already exists enter another login)");
+    .custom(isExistLogin)
+    .withMessage("Login is exist. (This login already exists enter another login)");
 
 export const passwordValidation = body('password')
     .trim()
     .isString()
-    .withMessage("Password has incorrect value. (BlogId doesn't string)")
-    .isLength({ min: 6, max: 20})
+    .withMessage("Password has incorrect value. (Password doesn't string)")
+    .isLength({min: 6, max: 20})
     .withMessage("Password has incorrect value. (Content has less than 6 or more than 20 characters)")
 
 export const emailValidation = body('email')
     .trim()
     .isString()
-    .withMessage("Login has incorrect value. (BlogId doesn't string)")
+    .withMessage("Email has incorrect value. (Email doesn't string)")
     .custom(isEmailPattern)
-    .withMessage("Login has incorrect value. (Login doesn't match pattern)")
+    .withMessage("Email has incorrect value. (Email doesn't match pattern)")
     .custom(isExistEmail)
     .withMessage("Email is exist. (This email already exists enter another email)");
 
@@ -155,7 +158,7 @@ export const contentValidation = body('content')
     .trim()
     .isString()
     .withMessage("Content has incorrect value. (BlogId doesn't string)")
-    .isLength({ min: 20, max: 300})
+    .isLength({min: 20, max: 300})
     .withMessage("Content has incorrect value. (Content has less than 20 or more than 300 characters)")
 
 export const blogValidation = [nameValidation, descriptionValidation, websiteUrlValidation];

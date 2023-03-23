@@ -5,6 +5,7 @@ import {TokenMapper} from "../dto/mappers/token-mapper";
 import {QueryService} from "../services/query-service";
 import {AuthRequest} from "../ts/types";
 
+
 export class AuthController {
     static async login(req: Request, res: Response) {
         try {
@@ -57,6 +58,10 @@ export class AuthController {
         try {
             const userService = new UserService();
             const {login, password, email} = req.body
+
+            const user = await userService.findByEmail(email)
+            console.log('User Validation Auth Controller', user)
+
             const unconfirmedUser = await userService.createByRegistration(login, password, email)
             console.log('unconfirmedUser', unconfirmedUser)
             res.sendStatus(204)

@@ -34,6 +34,14 @@ export class UserService {
         return await this.userRepository.createUser(login, hashPassword, email)
     }
 
+    public async findByEmail(email: string): Promise<IUser | null>  {
+        return this.userRepository.findUserByEmail(email)
+    }
+
+    public async findByLogin(email: string): Promise<IUser | null>  {
+        return this.userRepository.findUserByLogin(email)
+    }
+
     public async createByRegistration(login: string, password: string, email: string): Promise<IUser | null> {
         const hashPassword = await bcrypt.hash(password, 5);
         const code = uuidv4();

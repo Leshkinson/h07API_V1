@@ -31,6 +31,7 @@ export class UsersRepository {
     }
 
     public async findUserByEmail(email: string): Promise<IUser | null> {
+
         return this.userModel.findOne({"email": email})
     }
 
