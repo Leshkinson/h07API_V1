@@ -38,9 +38,15 @@ export class UserService {
         return this.userRepository.findUserByEmail(email)
     }
 
-    public async findByLogin(email: string): Promise<IUser | null> {
-        return this.userRepository.findUserByLogin(email)
+    public async findByLogin(login: string): Promise<IUser | null> {
+        return this.userRepository.findUserByLogin(login)
     }
+
+    public async findByCode(code: string): Promise<IUser | null> {
+        return await this.userRepository.findUserByCode(code)
+    }
+
+
 
     public async createByRegistration(login: string, password: string, email: string): Promise<IUser | null> {
         const hashPassword = await bcrypt.hash(password, 5);

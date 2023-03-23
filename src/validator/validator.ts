@@ -58,6 +58,46 @@ const isExistEmail: CustomValidator = async (value: string) => {
     return true;
 }
 
+const isNotExistEmail: CustomValidator = async (value: string) => {
+    const userService = new UserService()
+    const user = await userService.findByEmail(value)
+    if (!user) {
+        throw new Error()
+    }
+
+    return true;
+}
+
+const isConfirmedCode: CustomValidator = async (value: string) => {
+    const userService = new UserService()
+    const user = await userService.findByCode(value)
+    if (user?.isConfirmed) {
+        throw new Error()
+    }
+
+    return true;
+}
+
+const isExistCode: CustomValidator = async (value: string) => {
+    const userService = new UserService()
+    const user = await userService.findByCode(value)
+    if (!user) {
+        throw new Error()
+    }
+
+    return true;
+}
+
+const isConfirmedEmail: CustomValidator = async (value: string) => {
+    const userService = new UserService()
+    const user = await userService.findByEmail(value)
+    if (user?.isConfirmed) {
+        throw new Error()
+    }
+
+    return true;
+}
+
 const isExistLogin: CustomValidator = async (value: string) => {
     const userService = new UserService()
     const user = await userService.findByLogin(value)
@@ -151,6 +191,10 @@ export const emailValidation = body('email')
     .withMessage("Email has incorrect value. (Email doesn't string)")
     .custom(isEmailPattern)
     .withMessage("Email has incorrect value. (Email doesn't match pattern)")
+    .custom(isNotExistEmail)
+    .withMessage("Email is not exist. (This email not exists enter another email)")
+    .custom(isConfirmedEmail)
+    .withMessage("Email is confirmed. (This email already confirmed)")
 
 
 export const emailExistValidation = body('email')
@@ -166,6 +210,16 @@ export const contentValidation = body('content')
     .withMessage("Content has incorrect value. (BlogId doesn't string)")
     .isLength({min: 20, max: 300})
     .withMessage("Content has incorrect value. (Content has less than 20 or more than 300 characters)")
+
+export const codeConfirmed = body('code')
+    .trim()
+    .isString()
+    .withMessage("Email has incorrect value. (Email doesn't string)")
+    .custom(isConfirmedCode)
+    .withMessage("Code is confirmed. (This code already confirmed)")
+    .custom(isExistCode)
+    .withMessage("Code is not exist. (This Code not exists)")
+
 
 export const blogValidation = [nameValidation, descriptionValidation, websiteUrlValidation];
 export const postValidationWithoutBodyId = [titleValidation, shortDescriptionValidation, contentDescriptionValidation];
