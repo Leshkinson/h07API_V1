@@ -191,8 +191,8 @@ export const emailValidation = body('email')
     .withMessage("Email has incorrect value. (Email doesn't string)")
     .custom(isEmailPattern)
     .withMessage("Email has incorrect value. (Email doesn't match pattern)")
-    .custom(isNotExistEmail)
-    .withMessage("Email is not exist. (This email not exists enter another email)")
+    .custom(isExistEmail)
+    .withMessage("Email is exist. (This email already exists enter another email)")
     .custom(isConfirmedEmail)
     .withMessage("Email is confirmed. (This email already confirmed)")
 
@@ -201,8 +201,8 @@ export const emailExistValidation = body('email')
     .trim()
     .isString()
     .withMessage("Email has incorrect value. (Email doesn't string)")
-    .custom(isExistEmail)
-    .withMessage("Email is exist. (This email already exists enter another email)");
+    .custom(isNotExistEmail)
+    .withMessage("Email is not exist. (This email not exists enter another email)")
 
 export const contentValidation = body('content')
     .trim()
@@ -224,5 +224,5 @@ export const codeConfirmed = body('code')
 export const blogValidation = [nameValidation, descriptionValidation, websiteUrlValidation];
 export const postValidationWithoutBodyId = [titleValidation, shortDescriptionValidation, contentDescriptionValidation];
 export const postValidation = [titleValidation, shortDescriptionValidation, contentDescriptionValidation, blogIdValidation];
-export const userValidation = [loginValidation, passwordValidation, emailValidation, emailExistValidation]
+export const userValidation = [loginValidation, passwordValidation, emailValidation]
 export const commentValidation = [contentValidation]
