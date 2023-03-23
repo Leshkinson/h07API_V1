@@ -81,7 +81,9 @@ export class UserService {
         const mailService = new MailService()
         const user = await this.userRepository.findUserByEmail(email)
         if (user) {
-            await mailService.sendConfirmMessageToEmail(email, user.code)
+            const code = uuidv4();
+            await this.userRepository.updateUserByCode((user._id).toString(), code)
+            await mailService.sendConfirmMessageToEmail(email, code)
         }
     }
 

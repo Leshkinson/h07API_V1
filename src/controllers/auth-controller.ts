@@ -57,12 +57,8 @@ export class AuthController {
         try {
             const userService = new UserService();
             const {login, password, email} = req.body
+            await userService.createByRegistration(login, password, email)
 
-            const user = await userService.findByEmail(email)
-            console.log('User Validation Auth Controller', user)
-
-            const unconfirmedUser = await userService.createByRegistration(login, password, email)
-            console.log('unconfirmedUser', unconfirmedUser)
             res.sendStatus(204)
         } catch (error) {
             if (error instanceof Error) {

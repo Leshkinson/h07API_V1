@@ -45,6 +45,12 @@ export class UsersRepository {
         })
     }
 
+    public async updateUserByCode(id: string, code: string): Promise<IUser | null> {
+        return this.userModel.findOneAndUpdate({_id: id}, {
+            code: code
+        })
+    }
+
     public async findUserById(id: string | JwtPayload): Promise<IUser | null> {
         return this.userModel.findById({_id: id})
     }
