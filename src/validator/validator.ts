@@ -54,12 +54,12 @@ const isExistEmail: CustomValidator = async (value: string) => {
     return true
 }
 
-const isExistLogin: CustomValidator = async (value: string) => {
-    const userRepository = new UserRepository()
-    const user = await userRepository.findUserByLogin(value)
-    if(user) throw new Error()
-    return true
-}
+// const isExistLogin: CustomValidator = async (value: string) => {
+//     const userRepository = new UserRepository()
+//     const user = await userRepository.findUserByLogin(value)
+//     if(user) throw new Error()
+//     return true
+// }
 
 
 
@@ -132,8 +132,8 @@ export const loginValidation = body('login')
     .withMessage("Login has incorrect value. (Content has less than 3 or more than 10 characters)")
     .custom(isLoginPattern)
     .withMessage("Login has incorrect value. (Login doesn't match pattern)")
-    .custom(isExistLogin)
-    .withMessage("Login is exist. (This login already exists enter another login)");
+    // .custom(isExistLogin)
+    // .withMessage("Login is exist. (This login already exists enter another login)");
 
 export const passwordValidation = body('password')
     .trim()
