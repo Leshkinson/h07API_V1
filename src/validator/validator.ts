@@ -1,6 +1,6 @@
 import {BlogService} from "../services/blog-service";
 import {body, validationResult, CustomValidator} from 'express-validator';
-
+import {UserRepository} from "../repositories/users-repository";
 export const myValidationResult = validationResult.withDefaults({
     formatter: error => {
         return {
@@ -46,6 +46,22 @@ const isEmailPattern: CustomValidator = (value: string) => {
 
     return true;
 }
+
+const isExistEmail: CustomValidator = async (value: string) => {
+    const userRepository = new UserRepository()
+    const user = await userRepository.findUser(value)
+    if(user) throw new Error()
+    return true
+}
+
+const isExistLogin: CustomValidator = async (value: string) => {
+    const userRepository = new UserRepository()
+    const user = await userRepository.findUser(value)
+    if(user) throw new Error()
+    return true
+}
+
+
 
 export const nameValidation = body('name')
     .trim()
@@ -115,7 +131,9 @@ export const loginValidation = body('login')
     .isLength({ min: 3, max: 10})
     .withMessage("Login has incorrect value. (Content has less than 3 or more than 10 characters)")
     .custom(isLoginPattern)
-    .withMessage("Login has incorrect value. (Login doesn't match pattern)");
+    .withMessage("Login has incorrect value. (Login doesn't match pattern)")
+    .custom(isExistLogin)
+    .withMessage("Login is exist. (This login already exists enter another login)");
 
 export const passwordValidation = body('password')
     .trim()
@@ -129,7 +147,9 @@ export const emailValidation = body('email')
     .isString()
     .withMessage("Login has incorrect value. (BlogId doesn't string)")
     .custom(isEmailPattern)
-    .withMessage("Login has incorrect value. (Login doesn't match pattern)");
+    .withMessage("Login has incorrect value. (Login doesn't match pattern)")
+    .custom(isExistEmail)
+    .withMessage("Email is exist. (This email already exists enter another email)");
 
 export const contentValidation = body('content')
     .trim()

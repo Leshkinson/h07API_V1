@@ -35,7 +35,6 @@ export class UserService {
     }
 
     public async createByRegistration(login: string, password: string, email: string): Promise<IUser | null> {
-
         const hashPassword = await bcrypt.hash(password, 5);
         const code = uuidv4();
         const user = await this.userRepository.createUserByRegistration(login, hashPassword, email, code)

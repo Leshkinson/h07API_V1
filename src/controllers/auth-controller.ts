@@ -60,7 +60,6 @@ export class AuthController {
             const unconfirmedUser = await userService.createByRegistration(login, password, email)
             console.log('unconfirmedUser', unconfirmedUser)
             res.sendStatus(204)
-
         } catch (error) {
             if (error instanceof Error) {
                 res.sendStatus(400);
