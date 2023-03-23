@@ -1,8 +1,8 @@
-import {IComment, IPost} from "../ts/interfaces";
-import {CommentsRequest, PostsRequest} from "../ts/types";
 import {Request, Response} from "express";
+import {IComment, IPost} from "../ts/interfaces";
 import {PostService} from "../services/post-service";
 import {QueryService} from "../services/query-service";
+import {CommentsRequest, PostsRequest} from "../ts/types";
 
 export class PostController {
     static async getAllPosts(req: Request, res: Response) {
@@ -103,7 +103,6 @@ export class PostController {
             const {content} = req.body;
             const token = req.headers.authorization?.split(' ')[1]
             if (token) {
-                console.log('here')
                 const newComment: IComment | undefined = await queryService.createCommentForThePost(postId, content, token)
                 console.log({newComment})
                 if (newComment) res.status(201).json(newComment)
@@ -118,7 +117,6 @@ export class PostController {
 
     static async getAllCommentsForThePost(req: Request, res: Response) {
         try {
-            console.log('here')
             const queryService = new QueryService();
 
             const {postId} = req.params;
@@ -128,7 +126,6 @@ export class PostController {
 
             const comments: IComment[] = await queryService.getCommentsForThePost(postId, pageNumber, pageSize, sortBy, sortDirection);
             const totalCount: number = await queryService.getTotalCountCommentsForThePost(postId);
-            console.log('totalCount', totalCount)
 
             res.status(200).json({
                 "pagesCount": Math.ceil(totalCount / pageSize),

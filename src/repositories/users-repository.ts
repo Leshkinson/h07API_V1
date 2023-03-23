@@ -1,7 +1,7 @@
 import {IUser} from "../ts/interfaces";
+import {JwtPayload} from "jsonwebtoken";
 import {UserModel} from "../models/user-model";
 import {Model, RefType, SortOrder} from "mongoose";
-import {JwtPayload} from "jsonwebtoken";
 
 export class UsersRepository {
     private userModel: Model<IUser>;

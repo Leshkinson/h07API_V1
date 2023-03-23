@@ -1,7 +1,7 @@
-import {Request, Response, NextFunction} from "express";
-import {QueryService} from "../services/query-service";
-import {JWT, TokenService} from "../application/token-service";
 import jwt, {JwtPayload} from "jsonwebtoken";
+import {QueryService} from "../services/query-service";
+import {Request, Response, NextFunction} from "express";
+import {JWT, TokenService} from "../application/token-service";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {

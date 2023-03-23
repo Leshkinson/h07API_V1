@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {UserService} from "../services/user-service";
-import {TokenMapper} from "../dto/mappers/token-mapper";
 import {QueryService} from "../services/query-service";
+import {TokenMapper} from "../dto/mappers/token-mapper";
 import {JWT, TokenService} from "../application/token-service";
 
 export class AuthController {
@@ -33,10 +33,8 @@ export class AuthController {
             const tokenService = new TokenService();
             const queryService = new QueryService();
             const token: string | undefined = req.headers.authorization?.split(' ')[1];
-            console.log('Token', token)
             if (token) {
                 const payload = await tokenService.getUserIdByToken(token) as JWT
-                console.log('userId', payload)
                 const user = await queryService.findUser(payload.id)
                 res.status(200).json({
                     "email": user?.email,
@@ -73,7 +71,6 @@ export class AuthController {
             const {code} = req.body;
             const confirmed = await userService.confirmUser(code);
             if (confirmed) res.sendStatus(204)
-
         } catch (error) {
             if (error instanceof Error) {
                 res.sendStatus(400);
@@ -95,22 +92,5 @@ export class AuthController {
             }
         }
     }
-
-    // static async testMail(req: Request, res: Response) {
-    //     try {
-    //         const userService = new UserService();
-    //         const{email} = req.body
-    //         console.log('email',email)
-    //         await userService.test(email)
-    //         res.sendStatus(200).json()
-    //     } catch (error) {
-    //         if (error instanceof Error) {
-    //             res.sendStatus(400);
-    //             console.log(error.message);
-    //         }
-    //     }
-    //
-    // }
-
 }
 

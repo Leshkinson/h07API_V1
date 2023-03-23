@@ -2,7 +2,6 @@ import {IPost} from "../ts/interfaces";
 import mongoose, {Schema} from "mongoose";
 
 export const PostSchema = new Schema({
-    //_id: {type: mongoose.Schema.Types.ObjectId},
     title: {type: "string", required: true},
     shortDescription: {type: "string", required: true},
     content: {type: "string", required: true},

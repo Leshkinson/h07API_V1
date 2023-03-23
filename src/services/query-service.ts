@@ -1,14 +1,14 @@
-import {IBlog, IComment, IPost, IUser} from "../ts/interfaces";
+import {JwtPayload} from "jsonwebtoken";
 import {BlogModel} from "../models/blog-model";
 import {PostModel} from "../models/post-model";
+import {UserModel} from "../models/user-model";
 import {CommentModel} from "../models/comment-model";
 import mongoose, {Model, RefType, SortOrder} from "mongoose";
+import {IBlog, IComment, IPost, IUser} from "../ts/interfaces";
+import {JWT, TokenService} from "../application/token-service";
 import {BlogsRepository} from "../repositories/blogs-repository";
 import {PostsRepository} from "../repositories/posts-repository";
 import {UsersRepository} from "../repositories/users-repository";
-import {UserModel} from "../models/user-model";
-import {JwtPayload} from "jsonwebtoken";
-import {JWT, TokenService} from "../application/token-service";
 import {CommentsRepository} from "../repositories/comments-repository";
 
 export class QueryService {
@@ -31,27 +31,17 @@ export class QueryService {
     }
 
     public async findBlog(blogId: RefType): Promise<IBlog | undefined | null> {
-        const blog = await this.blogRepository.getOneBlog(blogId);
-        // if (!blog) throw new Error();
 
-        return blog;
+        return await this.blogRepository.getOneBlog(blogId);
     }
 
     public async findPost(postId: RefType): Promise<IPost | undefined | null> {
 
-        const post = await this.postRepository.getOnePost(postId);
-
-        // if (!post) throw new Error();
-
-        return post
+        return await this.postRepository.getOnePost(postId)
     }
 
     public async findUser(id: string | JwtPayload): Promise<IUser | undefined | null> {
-        const user = await this.userRepository.findUserById(id)
-        console.log('User', user)
-        // if (!user) throw new Error();
-
-        return user;
+        return await this.userRepository.findUserById(id);
     }
 
     public async getTotalCountForBlogs(searchNameTerm: string | undefined | object): Promise<number> {
@@ -114,21 +104,11 @@ export class QueryService {
         const queryService = new QueryService();
         const commentRepository = new CommentsRepository()
         const post = await this.findPost(postId)
-
         if (post) {
             const payload = await tokenService.getUserIdByToken(token) as JWT
-            console.log('payload query-service', payload)
             const user = await queryService.findUser(payload.id)
-            console.log('User', user)
             if (user) {
-                console.log('Here2')
-                console.log({content});
-                console.log({postId});
-                console.log('payload.id', payload.id);
-                console.log('login', user.login);
-                const comm = await commentRepository.createComment(content, postId, payload.id, user.login)
-                console.log('Comment', comm)
-                return comm
+                return await commentRepository.createComment(content, postId, payload.id, user.login)
             }
         }
 
@@ -141,14 +121,11 @@ export class QueryService {
         pageSize: number = 10,
         sortBy: string = 'createdAt',
         sortDirection: SortOrder = 'desc'): Promise<IComment[]> {
-        console.log('here2')
+
         const post = await this.findPost(postId);
-        console.log('Post', post)
         const skip: number = (+pageNumber - 1) * +pageSize;
         if (post) {
-            const comments = await this.commentModel.find({postId: (post?._id)?.toString()}).sort({[sortBy]: sortDirection}).skip(skip).limit(+pageSize);
-            console.log('query-service comments', comments)
-            return comments
+            return this.commentModel.find({postId: (post?._id)?.toString()}).sort({[sortBy]: sortDirection}).skip(skip).limit(+pageSize)
         }
         throw new Error();
     }

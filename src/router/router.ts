@@ -10,14 +10,11 @@ import {basicAuthorization} from "../authorizations/authorization";
 import {CommentController} from "../controllers/comment-controller";
 import {
     blogValidation, codeConfirmed,
-    commentValidation, emailExistValidation, emailValidation,
+    commentValidation, emailExistValidation,
     postValidation,
     postValidationWithoutBodyId,
     userValidation
 } from "../validator/validator";
-
-
-
 
 export const router = Router();
 
@@ -57,5 +54,4 @@ router.post('/auth/login', AuthController.login);
 router.post('/auth/registration-confirmation', codeConfirmed, codeConfirmed, isErrorMiddleware, AuthController.confirmEmail);
 router.post('/auth/registration', userValidation, isErrorMiddleware, AuthController.registration);
 router.post('/auth/registration-email-resending', emailExistValidation, isErrorMiddleware, AuthController.resendConfirm);
-// router.post('/auth/testmail', AuthController.testMail)
 router.get('/auth/me', authMiddleware, isErrorMiddleware, AuthController.me);

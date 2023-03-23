@@ -38,7 +38,3 @@ export type UsersRequest = {
     searchLoginTerm?: string | undefined,
     searchEmailTerm?: string | undefined,
 }
-
-// export type AuthRequest = {
-//     code: string
-// }

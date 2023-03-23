@@ -1,10 +1,8 @@
 import {Request, Response} from "express";
 import {IComment} from "../ts/interfaces";
+import {QueryService} from "../services/query-service";
 import {CommentService} from "../services/comment-service";
 import {JWT, TokenService} from "../application/token-service";
-import {QueryService} from "../services/query-service";
-
-// import {CustomError} from "../middleware/catch-error";
 
 export class CommentController {
 
@@ -18,29 +16,21 @@ export class CommentController {
             const token = req.headers.authorization?.split(' ')[1]
             if (token) {
                 const payload = await tokenService.getUserIdByToken(token) as JWT
-
                 const user = await queryService.findUser(payload.id);
-
-                if (!user) {
-                    res.sendStatus(404)
-
-                    return
-                }
-                const comment: IComment | undefined = await commentService.getOne(commentId)
-                if (!comment) {
+                const comment: IComment | undefined = await commentService.getOne(commentId);
+                if (!user || !comment) {
                     res.sendStatus(404)
 
                     return
                 }
                 if (comment?.commentatorInfo.userLogin !== user?.login ) {
-                    console.log('Here1')
                     res.sendStatus(403)
+
                     return
                 }
-
                 if (comment?.commentatorInfo.userId !== user?._id.toString()) {
-                    console.log('Here2')
                     res.sendStatus(403)
+
                     return
                 }
                 const updatedComment: IComment | undefined = await commentService.update(commentId, content)

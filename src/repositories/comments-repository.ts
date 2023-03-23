@@ -1,5 +1,5 @@
-import {IComment} from "../ts/interfaces";
 import {Model, RefType} from "mongoose";
+import {IComment} from "../ts/interfaces";
 import {CommentModel} from "../models/comment-model";
 
 export class CommentsRepository {
@@ -14,9 +14,7 @@ export class CommentsRepository {
     }
 
     public async updateComment(id: RefType, content: string): Promise<IComment| null> {
-        return this.commentModel.findOneAndUpdate({_id: id}, {
-            content
-        })
+        return this.commentModel.findOneAndUpdate({_id: id}, {content})
     }
 
     public async getOneComment(id: RefType): Promise<IComment | null> {

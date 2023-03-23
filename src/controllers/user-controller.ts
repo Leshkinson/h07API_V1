@@ -1,12 +1,8 @@
-import {Request, Response} from "express";
 import {IUser} from "../ts/interfaces";
-//import {SortOrder} from "mongoose";
 import {UsersRequest} from "../ts/types";
+import {Request, Response} from "express";
 import {UserService} from "../services/user-service";
 import {QueryService} from "../services/query-service";
-//import jwt from "jsonwebtoken"
-import {JWT, TokenService} from "../application/token-service";
-import {TokenMapper} from "../dto/mappers/token-mapper";
 
 export class UserController {
     static async getAllUsers(req: Request, res: Response) {

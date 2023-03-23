@@ -2,7 +2,6 @@ import {IBlog} from "../ts/interfaces";
 import mongoose, {Schema} from "mongoose";
 
 export const BlogSchema = new Schema({
-    //_id: {type: mongoose.Schema.Types.ObjectId},
     name: {type: "string", required: true},
     description: {type: "string", required: true},
     websiteUrl: {type: "string", required: true},

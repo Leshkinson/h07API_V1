@@ -16,7 +16,6 @@ export class PostsRepository {
         skip: number = 0,
         sortDirection: SortOrder = 'desc'): Promise<IPost[]> {
 
-
         return this.postModel.find().sort({[sortBy]: sortDirection}).skip(skip).limit(limit);
     }
 

@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 import {Options} from "nodemailer/lib/mailer";
 
-
 const host = "smtp.yandex.ru"
 const EMAIL_ADDRESS = "lopatkool93oleg@yandex.ru"
 const EMAIL_PASSWORD = "o1l9E9g3"

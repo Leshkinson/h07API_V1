@@ -1,5 +1,5 @@
-import {IComment} from "../ts/interfaces";
 import {RefType} from "mongoose";
+import {IComment} from "../ts/interfaces";
 import {CommentsRepository} from "../repositories/comments-repository";
 
 export class CommentService {
@@ -11,7 +11,6 @@ export class CommentService {
 
     public async find(id: RefType): Promise<IComment | undefined> {
         const comment = await this.commentRepository.getOneComment(id);
-
         if (!comment) throw new Error();
 
         return comment;
@@ -24,9 +23,7 @@ export class CommentService {
     }
 
     public async getOne(id: RefType): Promise<IComment | undefined> {
-
         const findComment: IComment | undefined = await this.find(id);
-
         if (findComment) return findComment;
         throw new Error();
     }
