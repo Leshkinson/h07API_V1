@@ -3,7 +3,6 @@ import {UserService} from "../services/user-service";
 import {JWT, TokenService} from "../application/token-service";
 import {TokenMapper} from "../dto/mappers/token-mapper";
 import {QueryService} from "../services/query-service";
-import {AuthRequest} from "../ts/types";
 
 
 export class AuthController {
@@ -77,7 +76,7 @@ export class AuthController {
         try {
             console.log('Here')
             const userService = new UserService();
-            const {code} = req.query as AuthRequest;
+            const {code} = req.body;
             console.log('code', code)
             const confirmed = await userService.confirmUser(code);
             if (confirmed) res.sendStatus(204)
