@@ -205,6 +205,8 @@ export const emailExistValidation = body('email')
     .withMessage("Email has incorrect value. (Email doesn't match pattern)")
     .custom(isNotExistEmail)
     .withMessage("Email is not exist. (This email not exists enter another email)")
+    .custom(isConfirmedEmail)
+    .withMessage("Email is confirmed. (This email already confirmed)")
 
 export const contentValidation = body('content')
     .trim()
