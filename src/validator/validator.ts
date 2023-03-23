@@ -49,14 +49,14 @@ const isEmailPattern: CustomValidator = (value: string) => {
 
 const isExistEmail: CustomValidator = async (value: string) => {
     const userRepository = new UserRepository()
-    const user = await userRepository.findUser(value)
+    const user = await userRepository.findUserByEmail(value)
     if(user) throw new Error()
     return true
 }
 
 const isExistLogin: CustomValidator = async (value: string) => {
     const userRepository = new UserRepository()
-    const user = await userRepository.findUser(value)
+    const user = await userRepository.findUserByLogin(value)
     if(user) throw new Error()
     return true
 }

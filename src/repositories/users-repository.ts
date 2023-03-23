@@ -34,6 +34,10 @@ export class UsersRepository {
         return this.userModel.findOne({"email": email})
     }
 
+    public async findUserByLogin(login: string): Promise<IUser | null> {
+        return this.userModel.findOne({"login": login})
+    }
+
     public async updateUserByConfirmed(id: string): Promise<IUser | null> {
         return this.userModel.findOneAndUpdate({_id: id}, {
             isConfirmed: true
