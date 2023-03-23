@@ -151,6 +151,12 @@ export const emailValidation = body('email')
     .withMessage("Email has incorrect value. (Email doesn't string)")
     .custom(isEmailPattern)
     .withMessage("Email has incorrect value. (Email doesn't match pattern)")
+
+
+export const emailExistValidation = body('email')
+    .trim()
+    .isString()
+    .withMessage("Email has incorrect value. (Email doesn't string)")
     .custom(isExistEmail)
     .withMessage("Email is exist. (This email already exists enter another email)");
 
@@ -164,5 +170,5 @@ export const contentValidation = body('content')
 export const blogValidation = [nameValidation, descriptionValidation, websiteUrlValidation];
 export const postValidationWithoutBodyId = [titleValidation, shortDescriptionValidation, contentDescriptionValidation];
 export const postValidation = [titleValidation, shortDescriptionValidation, contentDescriptionValidation, blogIdValidation];
-export const userValidation = [loginValidation, passwordValidation, emailValidation]
+export const userValidation = [loginValidation, passwordValidation, emailValidation, emailExistValidation]
 export const commentValidation = [contentValidation]

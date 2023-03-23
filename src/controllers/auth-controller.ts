@@ -109,7 +109,7 @@ export class AuthController {
             const{email} = req.body
             console.log('email',email)
             await userService.test(email)
-            res.sendStatus(204)
+            res.sendStatus(200).json()
         } catch (error) {
             if (error instanceof Error) {
                 res.sendStatus(400);
