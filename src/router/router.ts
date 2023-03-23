@@ -54,7 +54,7 @@ router.get('/comments/:id', CommentController.getOneComment);
 
 /**Auth**/
 router.post('/auth/login', AuthController.login);
-router.get('/auth/registration-confirmation', AuthController.confirmEmail);
+router.post('/auth/registration-confirmation', AuthController.confirmEmail);
 router.post('/auth/registration', userValidation, isErrorMiddleware, AuthController.registration);
 router.post('/auth/registration-email-resending', emailValidation, isErrorMiddleware, AuthController.resendConfirm);
 router.post('/auth/testmail', AuthController.testMail)
