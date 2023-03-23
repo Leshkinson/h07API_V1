@@ -57,5 +57,5 @@ router.post('/auth/login', AuthController.login);
 router.post('/auth/registration-confirmation', codeConfirmed, codeConfirmed, isErrorMiddleware, AuthController.confirmEmail);
 router.post('/auth/registration', userValidation, isErrorMiddleware, AuthController.registration);
 router.post('/auth/registration-email-resending', emailValidation, isErrorMiddleware, AuthController.resendConfirm);
-router.post('/auth/testmail', AuthController.testMail)
+// router.post('/auth/testmail', AuthController.testMail)
 router.get('/auth/me', authMiddleware, isErrorMiddleware, AuthController.me);
