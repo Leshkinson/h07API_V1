@@ -1,9 +1,8 @@
 import {Request, Response} from "express";
 import {UserService} from "../services/user-service";
-import {JWT, TokenService} from "../application/token-service";
 import {TokenMapper} from "../dto/mappers/token-mapper";
 import {QueryService} from "../services/query-service";
-
+import {JWT, TokenService} from "../application/token-service";
 
 export class AuthController {
     static async login(req: Request, res: Response) {

@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
+import {v4 as uuidv4} from "uuid";
 import {IUser} from "../ts/interfaces";
 import {RefType, SortOrder} from "mongoose";
-import {UsersRepository} from "../repositories/users-repository";
-import {v4 as uuidv4} from "uuid";
 import {MailService} from "../application/mail-service";
+import {UsersRepository} from "../repositories/users-repository";
 
 export class UserService {
     private userRepository: UsersRepository;
@@ -46,8 +46,6 @@ export class UserService {
         return await this.userRepository.findUserByCode(code)
     }
 
-
-
     public async createByRegistration(login: string, password: string, email: string): Promise<IUser | null> {
         const hashPassword = await bcrypt.hash(password, 5);
         const code = uuidv4();
@@ -62,36 +60,29 @@ export class UserService {
                 return null
             }
         }
+
         return user
     }
 
     public async confirmUser(code: string) {
-        const user = await this.userRepository.findUserByCode(code)
-        if (!user) return false
-        console.log('data by user', new Date(user.expirationDate).getTime())
-        console.log('Data now', new Date().getTime())
+        const user = await this.userRepository.findUserByCode(code);
+        if (!user) return false;
         if (new Date(user.expirationDate).getTime() > new Date().getTime()) {
             return await this.userRepository.updateUserByConfirmed((user._id).toString())
         }
-        await this.userRepository.deleteUser((user._id).toString())
+        await this.userRepository.deleteUser((user._id).toString());
+
         return false
     }
 
     public async resendConfirmByUser(email: string): Promise<void> {
-        const mailService = new MailService()
-        const user = await this.userRepository.findUserByEmail(email)
+        const mailService = new MailService();
+        const user = await this.userRepository.findUserByEmail(email);
         if (user) {
             const code = uuidv4();
-            await this.userRepository.updateUserByCode((user._id).toString(), code)
-            await mailService.sendConfirmMessageToEmail(email, code)
+            await this.userRepository.updateUserByCode((user._id).toString(), code);
+            await mailService.sendConfirmMessageToEmail(email, code);
         }
-    }
-
-    public async test(email: string): Promise<void> {
-        const mailService = new MailService()
-
-        await mailService.sendConfirmMessageToEmail(email, 'user.code')
-
     }
 
     public async delete(id: RefType): Promise<IUser> {
