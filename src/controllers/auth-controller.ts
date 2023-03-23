@@ -75,8 +75,10 @@ export class AuthController {
 
     static async confirmEmail(req: Request, res: Response) {
         try {
+            console.log('Here')
             const userService = new UserService();
             const {code} = req.query as AuthRequest;
+            console.log('code', code)
             const confirmed = await userService.confirmUser(code);
             if (confirmed) res.sendStatus(204)
 
