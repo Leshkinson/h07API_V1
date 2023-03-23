@@ -10,7 +10,7 @@ import {basicAuthorization} from "../authorizations/authorization";
 import {CommentController} from "../controllers/comment-controller";
 import {
     blogValidation, codeConfirmed,
-    commentValidation, emailValidation,
+    commentValidation, emailExistValidation, emailValidation,
     postValidation,
     postValidationWithoutBodyId,
     userValidation
@@ -56,6 +56,6 @@ router.get('/comments/:id', CommentController.getOneComment);
 router.post('/auth/login', AuthController.login);
 router.post('/auth/registration-confirmation', codeConfirmed, codeConfirmed, isErrorMiddleware, AuthController.confirmEmail);
 router.post('/auth/registration', userValidation, isErrorMiddleware, AuthController.registration);
-router.post('/auth/registration-email-resending', emailValidation, isErrorMiddleware, AuthController.resendConfirm);
+router.post('/auth/registration-email-resending', emailExistValidation, isErrorMiddleware, AuthController.resendConfirm);
 // router.post('/auth/testmail', AuthController.testMail)
 router.get('/auth/me', authMiddleware, isErrorMiddleware, AuthController.me);

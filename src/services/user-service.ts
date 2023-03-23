@@ -82,9 +82,7 @@ export class UserService {
         const user = await this.userRepository.findUserByEmail(email)
         if (user) {
             await mailService.sendConfirmMessageToEmail(email, user.code)
-            return
         }
-        throw new Error();
     }
 
     public async test(email: string): Promise<void> {
