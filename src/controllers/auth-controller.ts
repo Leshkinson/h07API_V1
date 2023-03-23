@@ -101,5 +101,22 @@ export class AuthController {
             }
         }
     }
+
+    static async testMail(req: Request, res: Response) {
+        try {
+            const userService = new UserService();
+            const{email} = req.body
+            console.log('email',email)
+            await userService.test(email)
+            res.sendStatus(204)
+        } catch (error) {
+            if (error instanceof Error) {
+                res.sendStatus(400);
+                console.log(error.message);
+            }
+        }
+
+    }
+
 }
 

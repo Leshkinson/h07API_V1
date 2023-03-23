@@ -34,11 +34,11 @@ export class UserService {
         return await this.userRepository.createUser(login, hashPassword, email)
     }
 
-    public async findByEmail(email: string): Promise<IUser | null>  {
+    public async findByEmail(email: string): Promise<IUser | null> {
         return this.userRepository.findUserByEmail(email)
     }
 
-    public async findByLogin(email: string): Promise<IUser | null>  {
+    public async findByLogin(email: string): Promise<IUser | null> {
         return this.userRepository.findUserByLogin(email)
     }
 
@@ -47,8 +47,8 @@ export class UserService {
         const code = uuidv4();
         const user = await this.userRepository.createUserByRegistration(login, hashPassword, email, code)
         try {
-        const mailService = new MailService()
-        await mailService.sendConfirmMessageToEmail(email, code)
+            const mailService = new MailService()
+            await mailService.sendConfirmMessageToEmail(email, code)
         } catch (error) {
             if (error instanceof Error) {
                 await this.userRepository.deleteUser((user._id).toString())
@@ -61,10 +61,10 @@ export class UserService {
 
     public async confirmUser(code: string) {
         const user = await this.userRepository.findUserByCode(code)
-        if(!user) return false
+        if (!user) return false
         console.log('data by user', new Date(user.expirationDate).getTime())
         console.log('Data now', new Date().getTime())
-        if(new Date(user.expirationDate).getTime() > new Date().getTime()){
+        if (new Date(user.expirationDate).getTime() > new Date().getTime()) {
             return await this.userRepository.updateUserByConfirmed((user._id).toString())
         }
         await this.userRepository.deleteUser((user._id).toString())
@@ -74,9 +74,16 @@ export class UserService {
     public async resendConfirmByUser(email: string): Promise<void> {
         const mailService = new MailService()
         const user = await this.userRepository.findUserByEmail(email)
-        if(user) {
+        if (user) {
             await mailService.sendConfirmMessageToEmail(email, user.code)
         }
+    }
+
+    public async test(email: string): Promise<void> {
+        const mailService = new MailService()
+
+        await mailService.sendConfirmMessageToEmail(email, 'user.code')
+
     }
 
     public async delete(id: RefType): Promise<IUser> {

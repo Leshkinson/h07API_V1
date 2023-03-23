@@ -2,9 +2,9 @@ import nodemailer from "nodemailer";
 import {Options} from "nodemailer/lib/mailer";
 
 
-const host = "smtp.gmail.com"
-const EMAIL_ADDRESS = "neatsoftmailparser@gmail.com"
-const EMAIL_PASSWORD = "uffobfeeutfsiqzd"
+const host = 'smtp.ethereal.email'
+const EMAIL_ADDRESS = 'bette51@ethereal.email'
+const EMAIL_PASSWORD = 'zGBdZGEBmraEufFgFU'
 
 export class MailTransporter {
     private provider;
